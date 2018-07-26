@@ -3,6 +3,7 @@
     package="trashy.txstate.cs4398.sm4.trashy">
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -25,6 +26,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="trashy.txstate.cs4398.sm4.trashy.Login" />
         </activity>
+        <activity
+            android:name=".Trashy_Leaderboard"
+            android:label="@string/title_activity_trashy__leaderboard"></activity>
     </application>
 
 </manifest>
