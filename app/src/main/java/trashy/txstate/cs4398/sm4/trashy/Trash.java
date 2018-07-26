@@ -3,6 +3,7 @@ package trashy.txstate.cs4398.sm4.trashy;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -34,7 +35,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import android.widget.TextView;
-
+import android.support.v7.app.AlertDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,7 +50,6 @@ import java.util.UUID;
 
 public class Trash extends AppCompatActivity {
 
-    private TextView mTextMessage;
     private Button captureBTN;
     private TextureView textureView;
 
@@ -80,15 +80,15 @@ public class Trash extends AppCompatActivity {
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Intent intent;
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                    intent = new Intent(Trash.this, Login.class);
+                    startActivity(intent);
                     return true;
             }
             return false;
@@ -119,7 +119,6 @@ public class Trash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trash);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -133,6 +132,37 @@ public class Trash extends AppCompatActivity {
                 takePicture();
             }
         });
+        captureBTN = findViewById(R.id.captureBTN);
+        captureBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Inflate dialog for information entry
+                AlertDialog.Builder dBuilder = new AlertDialog.Builder(Trash.this);
+                View dView = getLayoutInflater().inflate(R.layout.dialog_trash_info_entry, null);
+                //Assign and initialize handles to dialog components
+                //AutoCompleteTextView trashTypeEntryField = (AutoCompleteTextView) dView.findViewById(R.id.submit_trashInfo_Button);
+                Button submitTrashInfoButton = (Button) dView.findViewById(R.id.submit_trashInfo_Button);
+                Button cancelTrashInfoButton = (Button) dView.findViewById(R.id.cancel_trashInfo_Button);
+
+                submitTrashInfoButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Check for complete fields
+                        //if(!trashTypeEntryField.getText().toString().isEmpty()){
+                        Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
+                        // }
+                        // else{
+                        //Toast.makeText(Trash.this, "Complete all fields", Toast.LENGTH_SHORT).show();
+                        //}
+                    }
+                });
+                //Display dialog
+                dBuilder.setView(dView);
+                AlertDialog dialog = dBuilder.create();
+                dialog.show();
+            }
+        });
+
     }
 
     private void takePicture() {

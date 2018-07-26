@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Trashy</string>
-    <string name="title_activity_trash">Trash</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">Tr@shy</string>
+    <string name="title_activity_trash">Tr@sh Camera</string>
+    <string name="title_home">Tr@sh Cam</string>
+    <string name="title_dashboard">Leader Board</string>
+    <string name="title_notifications">Login</string>
 </resources>
