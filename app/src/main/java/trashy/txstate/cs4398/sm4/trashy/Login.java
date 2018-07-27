@@ -11,8 +11,12 @@ public class Login extends AppCompatActivity {
     //Handles
     /**Handle for username field*/
     private EditText userNameField;
+    /**Handle for password field*/
     private EditText passwordField;
+    /**Handle for sign in button*/
     private Button signInButton;
+    /**Handle for register button*/
+    private Button registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +32,13 @@ public class Login extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /**Intent used to specify which activity to jump to next when signInButton is pressed*/
                 Intent changeActivity;
 
                 changeActivity = new Intent(Login.this, Trash.class);
                 startActivity(changeActivity);
             }
         });
+
     }
 }
