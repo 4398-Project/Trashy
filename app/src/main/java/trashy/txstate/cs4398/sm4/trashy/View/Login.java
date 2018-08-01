@@ -1,4 +1,4 @@
-package trashy.txstate.cs4398.sm4.trashy;
+package trashy.txstate.cs4398.sm4.trashy.View;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import trashy.txstate.cs4398.sm4.trashy.R;
 
 public class Login extends AppCompatActivity {
     //Handles

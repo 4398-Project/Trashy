@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login">
+        <activity android:name=".View.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,15 +19,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Trash"
+            android:name=".View.Trash"
             android:label="@string/title_activity_trash"
-            android:parentActivityName=".Login">
+            android:parentActivityName=".View.Login">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="trashy.txstate.cs4398.sm4.trashy.Login" />
+                android:value="trashy.txstate.cs4398.sm4.trashy.View.Login" />
         </activity>
         <activity
-            android:name=".Trashy_Leaderboard"
+            android:name=".View.Trashy_Leaderboard"
             android:label="@string/title_activity_trashy__leaderboard"></activity>
     </application>
 

@@ -1,4 +1,4 @@
-package trashy.txstate.cs4398.sm4.trashy;
+package trashy.txstate.cs4398.sm4.trashy.View;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -34,7 +34,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.widget.TextView;
 import android.support.v7.app.AlertDialog;
 
 import java.io.File;
@@ -47,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import trashy.txstate.cs4398.sm4.trashy.R;
 
 public class Trash extends AppCompatActivity {
 

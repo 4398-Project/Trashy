@@ -1,4 +1,4 @@
-package trashy.txstate.cs4398.sm4.trashy;
+package trashy.txstate.cs4398.sm4.trashy.Model;
 
 public class User {
     private String username;

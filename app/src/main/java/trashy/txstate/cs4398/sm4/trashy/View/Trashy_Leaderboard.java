@@ -1,4 +1,4 @@
-package trashy.txstate.cs4398.sm4.trashy;
+package trashy.txstate.cs4398.sm4.trashy.View;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,6 +6,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import trashy.txstate.cs4398.sm4.trashy.R;
 
 public class Trashy_Leaderboard extends AppCompatActivity {
 
