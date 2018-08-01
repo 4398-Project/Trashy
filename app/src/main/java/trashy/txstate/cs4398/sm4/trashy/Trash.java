@@ -85,6 +85,8 @@ public class Trash extends AppCompatActivity {
                 case R.id.navigation_home:
                     return true;
                 case R.id.navigation_dashboard:
+                    intent = new Intent(Trash.this, Trashy_Leaderboard.class);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_notifications:
                     intent = new Intent(Trash.this, Login.class);
@@ -143,6 +145,7 @@ public class Trash extends AppCompatActivity {
                 //Inflate dialog for information entry
                 AlertDialog.Builder dBuilder = new AlertDialog.Builder(Trash.this);
                 View dView = getLayoutInflater().inflate(R.layout.dialog_trash_info_entry, null);
+
                 //Assign and initialize handles to dialog components
                 //AutoCompleteTextView trashTypeEntryField = (AutoCompleteTextView) dView.findViewById(R.id.submit_trashInfo_Button);
                 Button submitTrashInfoButton = (Button) dView.findViewById(R.id.submit_trashInfo_Button);

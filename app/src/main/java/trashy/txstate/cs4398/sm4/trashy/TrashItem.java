@@ -7,12 +7,10 @@ public class TrashItem {
     private boolean recyclable;
     private Integer pointWorth;
 
-    public TrashItem(String trashDescription, String trashType, String locationFound, boolean recyclable, Integer pointWorth) {
+    public TrashItem(String trashDescription, String trashType, String locationFound, boolean recyclable) {
+        setTrashType(trashType, recyclable);
         this.trashDescription = trashDescription;
-        setTrashType(trashType);
         this.locationFound = locationFound;
-        this.recyclable = recyclable;
-        this.pointWorth = pointWorth;
     }
 
     public String getTrashDescription() {
@@ -27,19 +25,23 @@ public class TrashItem {
         return trashType;
     }
 
-    public void setTrashType(String trashType) {
+    public void setTrashType(String trashType, boolean recyclable) {
         switch (trashType.toLowerCase()){
             case "plastic":
                 this.trashType = trashType;
+                pointWorth = (recyclable) ? 5 : 10;
                 break;
             case "paper" :
                 this.trashType = trashType;
+                pointWorth = (recyclable) ? 5 : 10;
                 break;
             case "metal" :
                 this.trashType = trashType;
+                pointWorth = (recyclable) ? 5 : 10;
                 break;
                 default:
-                    this.trashType = "unknown";
+                    this.trashType = "N/A";
+                    pointWorth = 0;
                     break;
         }
     }
@@ -64,7 +66,4 @@ public class TrashItem {
         return pointWorth;
     }
 
-    public void setPointWorth(Integer pointWorth) {
-        this.pointWorth = pointWorth;
-    }
 }
