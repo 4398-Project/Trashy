@@ -122,6 +122,10 @@ public class Trash extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        //Pulls user data from login activity for submission
+        Bundle bundle = getIntent().getExtras();
+
+
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
