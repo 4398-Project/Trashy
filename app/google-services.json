@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "102925046941",
+    "firebase_url": "https://trashy2-d3cf8.firebaseio.com",
+    "project_id": "trashy2-d3cf8",
+    "storage_bucket": "trashy2-d3cf8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102925046941:android:b423f55dc7974aa0",
+        "android_client_info": {
+          "package_name": "trashy.txstate.cs4398.sm4.trashy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102925046941-umcoqv7l14h2555vf1mckhmibuhhe5qr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "trashy.txstate.cs4398.sm4.trashy",
+            "certificate_hash": "6cb9be433acd4dba5ab4d03991a83aa9051947cf"
+          }
+        },
+        {
+          "client_id": "102925046941-2hp0811kmt3lo5r4hbatjbcsf6tce9el.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTHS8LSZS1x5J9cFea5iwQl5OuEqXQLTs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102925046941-2hp0811kmt3lo5r4hbatjbcsf6tce9el.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
