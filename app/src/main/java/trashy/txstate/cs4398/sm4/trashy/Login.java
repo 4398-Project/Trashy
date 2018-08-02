@@ -121,6 +121,12 @@ public class Login extends AppCompatActivity {
     private boolean rootUser(String userName, String password){
         if (userNameField.getText().toString().equals("mmr161@txstate.edu") && passwordField.getText().toString().equals("rootaccess")) {
             return true;
+        } else if (userNameField.getText().toString().equals("acs144@txstate.edu") && passwordField.getText().toString().equals("rootaccess")) {
+            return true;
+        } else if (userNameField.getText().toString().equals("dlr195@txstate.edu") && passwordField.getText().toString().equals("rootaccess")) {
+            return true;
+        } else if (userNameField.getText().toString().equals("m_v188@txstate.edu") && passwordField.getText().toString().equals("rootaccess")) {
+            return true;
         }
         return false;
     }
