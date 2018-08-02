@@ -18,6 +18,7 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -37,6 +38,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.w3c.dom.Text;
 
@@ -60,6 +65,7 @@ public class Trash extends AppCompatActivity {
 
     private Button captureBTN;
     private TextureView textureView;
+    private StorageReference mStorage;
 
     //Checks state orientation of image
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -133,11 +139,11 @@ public class Trash extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //Retrieve info from past activity
-        Intent intent = this.getIntent();
+       final  Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         //Vars
-        User user = (User) bundle.getSerializable("user");
-        final Submission submission = new Submission(user);
+       // User user = (User) bundle.getSerializable("user");
+       // final Submission submission = new Submission(user);
 
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
@@ -147,6 +153,7 @@ public class Trash extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 takePicture();
+                uploadPicture(intent);
             }
         });
         captureBTN = findViewById(R.id.captureBTN);
@@ -189,10 +196,10 @@ public class Trash extends AppCompatActivity {
                                 if (!trashLocation.isEmpty())
                                     if (!trashDescription.isEmpty());
                                         if (!recyclableField.getText().toString().isEmpty()){
-                                            for (int i = 0; i < numberOfTrashItems; i++){
+                                           /* for (int i = 0; i < numberOfTrashItems; i++){
                                                 TrashItem trashItem = new TrashItem(trashDescription, trashType, trashLocation, recyclable);
-                                                submission.addTrashItem(trashItem);
-                                            }
+                                                Submission.addTrashItem(trashItem);
+                                            }*/
                                             Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                         }
@@ -243,7 +250,7 @@ public class Trash extends AppCompatActivity {
                     int rotation = getWindowManager().getDefaultDisplay().getRotation();
                     captureBuilder.set(CaptureRequest.CONTROL_MODE, ORIENTATIONS.get(rotation));
 
-                    file = new File(Environment.getExternalStorageDirectory()+"/"+UUID.randomUUID().toString()+".jpg");
+                    /*file = new File(Environment.getExternalStorageDirectory()+"/"+UUID.randomUUID().toString()+".jpg");
                     ImageReader.OnImageAvailableListener readListener = new ImageReader.OnImageAvailableListener() {
                         @Override
                         public void onImageAvailable(ImageReader imageReader) {
@@ -283,7 +290,7 @@ public class Trash extends AppCompatActivity {
                     };
 
                     reader.setOnImageAvailableListener(readListener, mBackgroundHandler);
-                    final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
+                   */ final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
                     @Override
                     public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result){
                         super.onCaptureCompleted(session, request, result);
@@ -313,6 +320,18 @@ public class Trash extends AppCompatActivity {
                     e.printStackTrace();
         }
 
+    }
+
+    private void uploadPicture(Intent data){
+
+        Uri uri = data.getData();
+       StorageReference filepath = mStorage.child("Photos").child(uri.getLastPathSegment());
+       filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+           @Override
+           public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(Trash.this, "Uploading Finished...",Toast.LENGTH_LONG).show();
+           }
+       });
     }
 
     private void createCameraPreview() {
