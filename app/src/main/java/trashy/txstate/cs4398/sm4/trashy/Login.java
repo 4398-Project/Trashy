@@ -14,7 +14,7 @@ import com.google.firebase.auth.AuthResult;
 import android.support.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.OnCompleteListener;
-
+import java.lang.*;
 
 public class Login extends AppCompatActivity {
     //Handles
@@ -57,7 +57,7 @@ public class Login extends AppCompatActivity {
                 if (userNameField.getText().toString().isEmpty() || passwordField.getText().toString().isEmpty()) {
                     // Sign in fails due to one of the credentials being empty
                     Log.d(TAG, "Sign in failed. A sign in field is empty.");
-                    Toast.makeText(Login.this, "Sign in failed.",
+                    Toast.makeText(Login.this, "Registration failed.  E-mail/Password cannot be blank.",
                             Toast.LENGTH_LONG).show();
                     updateUI(null);
                 } else {
@@ -85,7 +85,17 @@ public class Login extends AppCompatActivity {
                                     } else {
                                         // Sign in fails due to incorrect credentials or error connecting to server
                                         Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                        Toast.makeText(Login.this, "Sign in failed.",
+                                        if (task.getException().toString().contains("The password is invalid or the user does not have a password."))
+                                            Toast.makeText(Login.this, "Incorrect password.",
+                                                    Toast.LENGTH_LONG).show();
+                                        else if (task.getException().toString().contains("The email address is badly formatted."))
+                                            Toast.makeText(Login.this, "Invalid e-mail address. Check formatting.",
+                                                    Toast.LENGTH_LONG).show();
+                                        else if (task.getException().toString().contains("There is no user record corresponding to this identifier."))
+                                            Toast.makeText(Login.this, "E-mail not found. Click \"Register\" to register a new e-mail.",
+                                                    Toast.LENGTH_LONG).show();
+                                        else
+                                            Toast.makeText(Login.this, "Sign in failed for undetermined reason. Check internet connection.",
                                                 Toast.LENGTH_LONG).show();
                                         updateUI(null);
                                     }
@@ -102,28 +112,44 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 //Retrieving user entered values
-                mAuth.createUserWithEmailAndPassword(userNameField.getText().toString(), passwordField.getText().toString())
-                        .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "createUserWithEmail:success");
-                                    Toast.makeText(Login.this, "Registration successful.",
-                                            Toast.LENGTH_LONG).show();
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    updateUI(user);
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    //Note: Not sure if Login correct here
-                                    Toast.makeText(Login.this, "Registration failed.  Use a valid email and Confirm password is 6+ characters.",
-                                            Toast.LENGTH_LONG).show();
-                                    updateUI(null);
-                                }
 
-                                // ...
-                            }
-                        });
+                if (userNameField.getText().toString().isEmpty() || passwordField.getText().toString().isEmpty()) {
+                    // Sign in fails due to one of the credentials being empty
+                    Log.d(TAG, "Sign in failed. A sign in field is empty.");
+                    Toast.makeText(Login.this, "Registration failed.  E-mail/Password cannot be blank.",
+                            Toast.LENGTH_LONG).show();
+                    updateUI(null);
+                } else {
+                    mAuth.createUserWithEmailAndPassword(userNameField.getText().toString(), passwordField.getText().toString())
+                            .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "createUserWithEmail:success");
+                                        Toast.makeText(Login.this, "Registration successful.",
+                                                Toast.LENGTH_LONG).show();
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        updateUI(user);
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w(TAG, "createUserWithEmail:failure\n\n" + task.getException().toString() +  "\n\n", task.getException());
+                                        if (task.getException().toString().contains("The email address is already in use by another account."))
+                                            Toast.makeText(Login.this, "This email address is already in use by another account.",
+                                                    Toast.LENGTH_LONG).show();
+                                        else if (task.getException().toString().contains("The given password is invalid."))
+                                            Toast.makeText(Login.this, "The given password is invalid. It must contain at least 6 characters.",
+                                                    Toast.LENGTH_LONG).show();
+                                        //Note: Not sure if Login correct here
+                                        else
+                                            Toast.makeText(Login.this, "Registration failed for undetermined reason. Check internet connection.",
+                                                Toast.LENGTH_LONG).show();
+                                        updateUI(null);
+                                    }
+
+                                    // ...
+                                }
+                            });
+                }
             }
         });
 
