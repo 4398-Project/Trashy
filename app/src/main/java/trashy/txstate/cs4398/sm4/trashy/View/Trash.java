@@ -51,6 +51,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import trashy.txstate.cs4398.sm4.trashy.Model.Submission;
+import trashy.txstate.cs4398.sm4.trashy.Model.TrashItem;
+import trashy.txstate.cs4398.sm4.trashy.Model.User;
 import trashy.txstate.cs4398.sm4.trashy.R;
 
 public class Trash extends AppCompatActivity {
@@ -129,9 +132,12 @@ public class Trash extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        //Pulls user data from login activity for submission
-        Bundle bundle = getIntent().getExtras();
-
+        //Retrieve info from past activity
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+        //Vars
+        User user = (User) bundle.getSerializable("user");
+        final Submission submission = new Submission(user);
 
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
@@ -153,9 +159,10 @@ public class Trash extends AppCompatActivity {
 
                 //Assign and initialize handles to dialog components
                 final EditText trashTypeEntryField = dView.findViewById(R.id.trash_type_field);
-                final EditText recyclable = dView.findViewById(R.id.recyclable_trash_info_field);
-                final EditText numberOfTrashItems = dView.findViewById(R.id.number_of_items_trash_info_field);
-                final EditText trashItemLocation = dView.findViewById(R.id.location_of_trash_field);
+                final EditText recyclableField = dView.findViewById(R.id.recyclable_trash_info_field);
+                final EditText numberOfTrashItemsField = dView.findViewById(R.id.number_of_items_trash_info_field);
+                final EditText trashItemLocationField = dView.findViewById(R.id.location_of_trash_field);
+                final EditText trashDescriptionField = dView.findViewById(R.id.trash_description_field);
 
                 Button submitTrashInfoButton = (Button) dView.findViewById(R.id.submit_trashInfo_Button);
                 Button cancelTrashInfoButton = (Button) dView.findViewById(R.id.cancel_trashInfo_Button);
@@ -169,14 +176,27 @@ public class Trash extends AppCompatActivity {
                 submitTrashInfoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Pull fields
+                        String trashDescription = trashDescriptionField.getText().toString();
+                        String trashType = trashTypeEntryField.getText().toString();
+                        String trashLocation = trashItemLocationField.getText().toString();
+                        Boolean recyclable = (recyclableField.getText().toString().toLowerCase() == "yes") ? true : false;
+                        Integer numberOfTrashItems = Integer.parseInt(numberOfTrashItemsField.getText().toString());
+
                         //Check for complete fields
-                        if(!trashTypeEntryField.getText().toString().isEmpty()){
-                            Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                         }
-                         else{
-                            Toast.makeText(Trash.this, "Complete all fields", Toast.LENGTH_SHORT).show();
-                        }
+                        if(!trashType.isEmpty())
+                            if (numberOfTrashItems > 0)
+                                if (!trashLocation.isEmpty())
+                                    if (!trashDescription.isEmpty());
+                                        if (!recyclableField.getText().toString().isEmpty()){
+                                            for (int i = 0; i < numberOfTrashItems; i++){
+                                                TrashItem trashItem = new TrashItem(trashDescription, trashType, trashLocation, recyclable);
+                                                submission.addTrashItem(trashItem);
+                                            }
+                                            Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                        }
+                        Toast.makeText(Trash.this, "Complete all fields", Toast.LENGTH_SHORT).show();
                     }
                 });
                 cancelTrashInfoButton.setOnClickListener(new View.OnClickListener() {

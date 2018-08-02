@@ -9,11 +9,16 @@ public class Submission {
     private User user;
     private ArrayList<TrashItem> trashBin;
 
+    private Integer getLastId(){
+        //gets last id from server
+        return 0;
+    }
     public Submission(User user) {
         this.user = user;
         //lastID must be pulled from server
-        id = lastId + 1;
+        id = getLastId() + 1;
     }
+
     public void addTrashItem(TrashItem trashItem){
         this.trashBin.add(trashItem);
         this.totalPoints += trashItem.getPointWorth();
