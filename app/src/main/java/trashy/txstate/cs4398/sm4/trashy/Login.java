@@ -53,38 +53,47 @@ public class Login extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent changeActivity;
-                changeActivity = new Intent(Login.this, Trash.class);
-                startActivity(changeActivity);*/
 
-                mAuth.signInWithEmailAndPassword(userNameField.getText().toString(), passwordField.getText().toString())
-                        .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                //if (userNameField.getText().toString().equals("mmr161@txstate.edu") && passwordField.getText().toString().equals("rootaccess")) {
-                                if (rootUser(userNameField.getText().toString(), passwordField.getText().toString())){
-                                    Log.d(TAG, "rootUserDetected");
-                                } else if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "signInWithEmail:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    updateUI(user);
+                if (userNameField.getText().toString().isEmpty() || passwordField.getText().toString().isEmpty()) {
+                    // Sign in fails due to one of the credentials being empty
+                    Log.d(TAG, "Sign in failed. A sign in field is empty.");
+                    Toast.makeText(Login.this, "Sign in failed.",
+                            Toast.LENGTH_LONG).show();
+                    updateUI(null);
+                } else {
+                    mAuth.signInWithEmailAndPassword(userNameField.getText().toString(), passwordField.getText().toString())
+                            .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
 
-                                    Intent changeActivity;
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (rootUser(userNameField.getText().toString(), passwordField.getText().toString())) {
+                                        Log.d(TAG, "rootUserDetected");
+                                        Toast.makeText(Login.this, "Root User Detected.",
+                                                Toast.LENGTH_LONG).show();
+                                    } else if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "signInWithEmail:success");
+                                        Toast.makeText(Login.this, "Sign in successful.",
+                                                Toast.LENGTH_LONG).show();
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        updateUI(user);
 
-                                    changeActivity = new Intent(Login.this, Trash.class);
-                                    startActivity(changeActivity);
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(Login.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                    updateUI(null);
+                                        Intent changeActivity;
+
+                                        changeActivity = new Intent(Login.this, Trash.class);
+                                        startActivity(changeActivity);
+                                    } else {
+                                        // Sign in fails due to incorrect credentials or error connecting to server
+                                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                        Toast.makeText(Login.this, "Sign in failed.",
+                                                Toast.LENGTH_LONG).show();
+                                        updateUI(null);
+                                    }
+
+                                    // ...
                                 }
-
-                                // ...
-                            }
-                        });
+                            });
+                }
             }
         });
 
@@ -99,14 +108,16 @@ public class Login extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(TAG, "createUserWithEmail:success");
+                                    Toast.makeText(Login.this, "Registration successful.",
+                                            Toast.LENGTH_LONG).show();
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                     //Note: Not sure if Login correct here
-                                    Toast.makeText(Login.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Login.this, "Registration failed.  Use a valid email and Confirm password is 6+ characters.",
+                                            Toast.LENGTH_LONG).show();
                                     updateUI(null);
                                 }
 
