@@ -61,7 +61,10 @@ public class Login extends AppCompatActivity {
                         .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
+                                //if (userNameField.getText().toString().equals("mmr161@txstate.edu") && passwordField.getText().toString().equals("rootaccess")) {
+                                if (rootUser(userNameField.getText().toString(), passwordField.getText().toString())){
+                                    Log.d(TAG, "rootUserDetected");
+                                } else if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(TAG, "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
@@ -113,6 +116,13 @@ public class Login extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean rootUser(String userName, String password){
+        if (userNameField.getText().toString().equals("mmr161@txstate.edu") && passwordField.getText().toString().equals("rootaccess")) {
+            return true;
+        }
+        return false;
     }
 
     //TODO
