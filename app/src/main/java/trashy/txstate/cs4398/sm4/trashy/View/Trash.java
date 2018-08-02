@@ -33,8 +33,12 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.support.v7.app.AlertDialog;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -148,26 +152,39 @@ public class Trash extends AppCompatActivity {
                 View dView = getLayoutInflater().inflate(R.layout.dialog_trash_info_entry, null);
 
                 //Assign and initialize handles to dialog components
-                //AutoCompleteTextView trashTypeEntryField = (AutoCompleteTextView) dView.findViewById(R.id.submit_trashInfo_Button);
+                final EditText trashTypeEntryField = dView.findViewById(R.id.trash_type_field);
+                final EditText recyclable = dView.findViewById(R.id.recyclable_trash_info_field);
+                final EditText numberOfTrashItems = dView.findViewById(R.id.number_of_items_trash_info_field);
+                final EditText trashItemLocation = dView.findViewById(R.id.location_of_trash_field);
+
                 Button submitTrashInfoButton = (Button) dView.findViewById(R.id.submit_trashInfo_Button);
                 Button cancelTrashInfoButton = (Button) dView.findViewById(R.id.cancel_trashInfo_Button);
 
+                //Display dialog
+                dBuilder.setView(dView);
+                final AlertDialog dialog = dBuilder.create();
+                dialog.show();
+
+                //Listeners for trash info dialog
                 submitTrashInfoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //Check for complete fields
-                        //if(!trashTypeEntryField.getText().toString().isEmpty()){
-                        Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
-                        // }
-                        // else{
-                        //Toast.makeText(Trash.this, "Complete all fields", Toast.LENGTH_SHORT).show();
-                        //}
+                        if(!trashTypeEntryField.getText().toString().isEmpty()){
+                            Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                         }
+                         else{
+                            Toast.makeText(Trash.this, "Complete all fields", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
-                //Display dialog
-                dBuilder.setView(dView);
-                AlertDialog dialog = dBuilder.create();
-                dialog.show();
+                cancelTrashInfoButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
 

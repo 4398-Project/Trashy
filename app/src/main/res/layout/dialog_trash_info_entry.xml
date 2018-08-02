@@ -18,18 +18,37 @@
         tools:layout_editor_absoluteX="134dp"
         tools:layout_editor_absoluteY="16dp" />
 
-    <AutoCompleteTextView
-        android:id="@+id/autoComplete_trashInfo_field"
+    <EditText
+        android:id="@+id/trash_type_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tr@sh Type" />
+        android:ems="10"
+        android:inputType="text"
+        android:text="Type : plastic, paper, or metal" />
 
-    <TextView
-        android:id="@+id/textView"
+    <EditText
+        android:id="@+id/recyclable_trash_info_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="18sp" />
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Is it recyclable?" />
+
+    <EditText
+        android:id="@+id/number_of_items_trash_info_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="Number of trash items" />
+
+    <EditText
+        android:id="@+id/location_of_trash_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Location" />
 
     <LinearLayout
         android:layout_width="match_parent"
