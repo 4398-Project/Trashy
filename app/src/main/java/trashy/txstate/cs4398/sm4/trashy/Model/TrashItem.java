@@ -10,6 +10,7 @@ public class TrashItem {
     private boolean recyclable;
     private Integer pointWorth;
 
+
     /**
      * Instantiates a new Trash item.
      *

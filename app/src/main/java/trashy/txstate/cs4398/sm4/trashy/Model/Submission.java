@@ -13,19 +13,14 @@ public class Submission {
         this.user = user;
         //lastID must be pulled from server
         id = lastId + 1;
-
-        //Point algorithm (adds up total points of all trash in trashBin array list
-        for (TrashItem trashItem : trashBin) {
-          totalPoints += trashItem.getPointWorth();
-        }
+    }
+    public void addTrashItem(TrashItem trashItem){
+        this.trashBin.add(trashItem);
+        this.totalPoints += trashItem.getPointWorth();
     }
 
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Integer getTotalPoints() {
@@ -36,15 +31,7 @@ public class Submission {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public ArrayList<TrashItem> getTrashBin() {
         return trashBin;
-    }
-
-    public void setTrashBin(ArrayList<TrashItem> trashBin) {
-        this.trashBin = trashBin;
     }
 }
