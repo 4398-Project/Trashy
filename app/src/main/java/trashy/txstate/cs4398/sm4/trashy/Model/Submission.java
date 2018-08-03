@@ -10,7 +10,7 @@ public class Submission {
     private Integer lastId = 0; // must be pulled from DB
     private Integer totalPoints;
     private User user;
-    private ArrayList<TrashItem> trashBin;
+    private TrashItem trashItem;
 
     private Integer getLastId(){
         //gets last id from server
@@ -33,9 +33,9 @@ public class Submission {
      *
      * @param trashItem the trash item
      */
-    public void addTrashItem(TrashItem trashItem){
-        this.trashBin.add(trashItem);
-        this.totalPoints += trashItem.getPointWorth();
+    public void addTrashItem(TrashItem trashItem, Integer numberOfTrashItems){
+        this.trashItem = trashItem;
+        this.totalPoints = trashItem.getPointWorth() * numberOfTrashItems;
     }
 
     /**
@@ -65,12 +65,4 @@ public class Submission {
         return user;
     }
 
-    /**
-     * Gets trash bin.
-     *
-     * @return the trash bin
-     */
-    public ArrayList<TrashItem> getTrashBin() {
-        return trashBin;
-    }
 }

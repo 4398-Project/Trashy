@@ -22,9 +22,11 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Size;
@@ -39,7 +41,9 @@ import android.widget.Toast;
 import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -65,7 +69,11 @@ public class Trash extends AppCompatActivity {
 
     private Button captureBTN;
     private TextureView textureView;
-    private StorageReference mStorage;
+    FirebaseStorage fireStorage = FirebaseStorage.getInstance();
+    StorageReference storageRef = fireStorage.getReference();
+    StorageReference picRef = storageRef.child("cuck.jpg");
+
+
 
     //Checks state orientation of image
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -143,8 +151,7 @@ public class Trash extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         //Vars
        // User user = (User) bundle.getSerializable("user");
-       // final Submission submission = new Submission(user);
-
+            final User user = null;
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
@@ -153,10 +160,11 @@ public class Trash extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 takePicture();
-                uploadPicture(intent);
+                uploadPicture();
+
             }
-        });
-        captureBTN = findViewById(R.id.captureBTN);
+        });}
+       /* captureBTN = findViewById(R.id.captureBTN);
         captureBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,7 +196,14 @@ public class Trash extends AppCompatActivity {
                         String trashType = trashTypeEntryField.getText().toString();
                         String trashLocation = trashItemLocationField.getText().toString();
                         Boolean recyclable = (recyclableField.getText().toString().toLowerCase() == "yes") ? true : false;
-                        Integer numberOfTrashItems = Integer.parseInt(numberOfTrashItemsField.getText().toString());
+                        Integer numberOfTrashItems;
+                        try {
+                            numberOfTrashItems = Integer.parseInt(numberOfTrashItemsField.getText().toString());
+                        }catch (NumberFormatException ex){
+                            numberOfTrashItems = 0;
+                            Toast.makeText(Trash.this, "Enter a valid number of trash items", Toast.LENGTH_SHORT).show();
+                        }
+
 
                         //Check for complete fields
                         if(!trashType.isEmpty())
@@ -196,10 +211,15 @@ public class Trash extends AppCompatActivity {
                                 if (!trashLocation.isEmpty())
                                     if (!trashDescription.isEmpty());
                                         if (!recyclableField.getText().toString().isEmpty()){
-                                           /* for (int i = 0; i < numberOfTrashItems; i++){
+
                                                 TrashItem trashItem = new TrashItem(trashDescription, trashType, trashLocation, recyclable);
-                                                Submission.addTrashItem(trashItem);
-                                            }*/
+                                                Submission submission = new Submission(user);
+                                                submission.addTrashItem(trashItem, numberOfTrashItems);
+
+
+                                           // uploadPicture();
+
+
                                             Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                         }
@@ -216,7 +236,7 @@ public class Trash extends AppCompatActivity {
         });
 
     }
-
+*/
     private void takePicture() {
         if (cameraDevice == null)
             return;
@@ -237,6 +257,7 @@ public class Trash extends AppCompatActivity {
                     height = jpegSizes[0].getHeight();
                 }
 
+
                 final ImageReader reader = ImageReader.newInstance(width,height,ImageFormat.JPEG,1);
                 List<Surface> outputSurface = new ArrayList<>(2);
                 outputSurface.add(reader.getSurface());
@@ -250,51 +271,55 @@ public class Trash extends AppCompatActivity {
                     int rotation = getWindowManager().getDefaultDisplay().getRotation();
                     captureBuilder.set(CaptureRequest.CONTROL_MODE, ORIENTATIONS.get(rotation));
 
-                    /*file = new File(Environment.getExternalStorageDirectory()+"/"+UUID.randomUUID().toString()+".jpg");
-                    ImageReader.OnImageAvailableListener readListener = new ImageReader.OnImageAvailableListener() {
-                        @Override
-                        public void onImageAvailable(ImageReader imageReader) {
-                            Image image = null;
-                            try{
-                                image = reader.acquireLatestImage();
-                                ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-                                byte[] bytes = new byte[buffer.capacity()];
-                                buffer.get(bytes);
-                                save(bytes);
-                            }
-                            catch (FileNotFoundException e)
-                            {
-                                e.printStackTrace();
-                            }
-                            catch (IOException e)
-                            {
-                                e.printStackTrace();
-                            }
-                            finally {
-                                {
-                                    if (image != null)
-                                        image.close();
-                                }
+            file = new File("SDCARD/Android/data");
+            ImageReader.OnImageAvailableListener readListener = new ImageReader.OnImageAvailableListener() {
+                @Override
+                public void onImageAvailable(ImageReader imageReader) {
+                    Image image = null;
+                    try{
+                        image = reader.acquireLatestImage();
+                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+                        byte[] bytes = new byte[buffer.capacity()];
+                        buffer.get(bytes);
+                        save(bytes);
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    finally {
+                        {
+                            if (image != null)
+                                image.close();
                         }
                     }
-                    private void save(byte[] bytes) throws IOException{
-                            OutputStream outputStream = null;
-                            try{
-                                outputStream = new FileOutputStream(file);
-                                outputStream.write(bytes);
-                            }finally {
-                                if (outputStream != null)
-                                    outputStream.close();
-                            }
-                            }
-                    };
+                }
+                private void save(byte[] bytes) throws IOException{
+                    UploadTask uploadTask = picRef.putBytes(bytes);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(Trash.this, "Failed hahaha", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(Trash.this, "Somehow Someway it worked", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
+                }
+            };
                     reader.setOnImageAvailableListener(readListener, mBackgroundHandler);
-                   */ final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
+                    final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
                     @Override
                     public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result){
                         super.onCaptureCompleted(session, request, result);
-                        Toast.makeText(Trash.this, "Saved " +file, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Trash.this, "Saved " +file, Toast.LENGTH_SHORT).show();
                         createCameraPreview();
                     }
 
@@ -322,16 +347,9 @@ public class Trash extends AppCompatActivity {
 
     }
 
-    private void uploadPicture(Intent data){
+    private void uploadPicture() {
 
-        Uri uri = data.getData();
-       StorageReference filepath = mStorage.child("Photos").child(uri.getLastPathSegment());
-       filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-           @Override
-           public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(Trash.this, "Uploading Finished...",Toast.LENGTH_LONG).show();
-           }
-       });
+
     }
 
     private void createCameraPreview() {
@@ -371,7 +389,6 @@ public class Trash extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
     @SuppressLint("MissingPermission")
     private void openCamera() {
