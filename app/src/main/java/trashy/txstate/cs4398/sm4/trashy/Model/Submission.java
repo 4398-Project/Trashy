@@ -6,26 +6,20 @@ import java.util.ArrayList;
  * The type Submission.
  */
 public class Submission {
-    private Integer id;
+    private String id;
     private Integer lastId = 0; // must be pulled from DB
     private Integer totalPoints;
     private User user;
     private TrashItem trashItem;
-
-    private Integer getLastId(){
-        //gets last id from server
-        return 0;
-    }
 
     /**
      * Instantiates a new Submission.
      *
      * @param user the user
      */
-    public Submission(User user) {
+    public Submission(User user, String id) {
         this.user = user;
-        //lastID must be pulled from server
-        id = getLastId() + 1;
+        this.id = id;
     }
 
     /**
@@ -43,7 +37,7 @@ public class Submission {
      *
      * @return the id
      */
-    public  Integer getId() {
+    public  String getId() {
         return id;
     }
 

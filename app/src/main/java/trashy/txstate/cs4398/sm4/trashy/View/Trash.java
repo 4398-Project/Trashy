@@ -43,6 +43,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -60,6 +62,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import trashy.txstate.cs4398.sm4.trashy.Controller.DBInterface;
 import trashy.txstate.cs4398.sm4.trashy.Model.Submission;
 import trashy.txstate.cs4398.sm4.trashy.Model.TrashItem;
 import trashy.txstate.cs4398.sm4.trashy.Model.User;
@@ -71,8 +74,6 @@ public class Trash extends AppCompatActivity {
     private TextureView textureView;
     FirebaseStorage fireStorage = FirebaseStorage.getInstance();
     StorageReference storageRef = fireStorage.getReference();
-    StorageReference picRef = storageRef.child("cuck.jpg");
-
 
 
     //Checks state orientation of image
@@ -168,7 +169,14 @@ public class Trash extends AppCompatActivity {
         captureBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePicture();
+                //Get DB Instance to store submissions
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DBInterface dbInterface = new DBInterface(database);
+                //Generate the ID
+                final String ID = dbInterface.genID();
+                //Gen reference for pic storage from ID
+                StorageReference picRef = storageRef.child(ID + ".jpg");
+                takePicture(picRef);
                 //Inflate dialog for information entry
                 AlertDialog.Builder dBuilder = new AlertDialog.Builder(Trash.this);
                 View dView = getLayoutInflater().inflate(R.layout.dialog_trash_info_entry, null);
@@ -213,9 +221,9 @@ public class Trash extends AppCompatActivity {
                                     if (!trashDescription.isEmpty());
                                         if (!recyclableField.getText().toString().isEmpty()){
                                             TrashItem trashItem = new TrashItem(trashDescription, trashType, trashLocation, recyclable);
-                                            Submission submission = new Submission(user);
+                                            Submission submission = new Submission(user,ID);
                                             submission.addTrashItem(trashItem, numberOfTrashItems);
-                                            uploadPicture();
+                                            dbInterface.uploadSubmission(submission);
                                             Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                         }
@@ -233,7 +241,7 @@ public class Trash extends AppCompatActivity {
 
     }
 
-    private void takePicture() {
+    private void takePicture(final StorageReference picRef) {
         if (cameraDevice == null)
             return;
         CameraManager manager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
