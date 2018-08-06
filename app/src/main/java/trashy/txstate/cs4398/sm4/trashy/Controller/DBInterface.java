@@ -15,6 +15,6 @@ public class DBInterface {
     }
 
     public void uploadSubmission(Submission submission){
-
+        reference.child("submissions").child(submission.getId().toString()).setValue(submission);
     }
 }

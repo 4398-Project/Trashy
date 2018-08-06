@@ -155,7 +155,7 @@ public class Trash extends AppCompatActivity {
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        captureBTN = (Button)findViewById(R.id.captureBTN);
+        /*captureBTN = (Button)findViewById(R.id.captureBTN);
         captureBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,11 +163,12 @@ public class Trash extends AppCompatActivity {
                 uploadPicture();
 
             }
-        });}
-       /* captureBTN = findViewById(R.id.captureBTN);
+        });}*/
+        captureBTN = findViewById(R.id.captureBTN);
         captureBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                takePicture();
                 //Inflate dialog for information entry
                 AlertDialog.Builder dBuilder = new AlertDialog.Builder(Trash.this);
                 View dView = getLayoutInflater().inflate(R.layout.dialog_trash_info_entry, null);
@@ -211,15 +212,10 @@ public class Trash extends AppCompatActivity {
                                 if (!trashLocation.isEmpty())
                                     if (!trashDescription.isEmpty());
                                         if (!recyclableField.getText().toString().isEmpty()){
-
-                                                TrashItem trashItem = new TrashItem(trashDescription, trashType, trashLocation, recyclable);
-                                                Submission submission = new Submission(user);
-                                                submission.addTrashItem(trashItem, numberOfTrashItems);
-
-
-                                           // uploadPicture();
-
-
+                                            TrashItem trashItem = new TrashItem(trashDescription, trashType, trashLocation, recyclable);
+                                            Submission submission = new Submission(user);
+                                            submission.addTrashItem(trashItem, numberOfTrashItems);
+                                            uploadPicture();
                                             Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                         }
@@ -236,7 +232,7 @@ public class Trash extends AppCompatActivity {
         });
 
     }
-*/
+
     private void takePicture() {
         if (cameraDevice == null)
             return;
