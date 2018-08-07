@@ -1,0 +1,32 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/leaderboard_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rank"
+        android:layout_weight="33.33"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:id="@+id/leaderboard_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Name"
+        android:layout_weight="33.33"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:id="@+id/leaderboard_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Points"
+        android:layout_weight="33.33"
+        android:textAlignment="center"/>
+
+</LinearLayout>

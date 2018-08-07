@@ -26,9 +26,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="trashy.txstate.cs4398.sm4.trashy.View.Login" />
         </activity>
-        <activity
-            android:name=".View.Trashy_Leaderboard"
-            android:label="@string/title_activity_trashy__leaderboard"></activity>
+        <activity android:name=".Controller.LeaderboardListActivity">
+
+        </activity>
+        <activity android:name=".Controller.CrimeActivity">
+
+        </activity>
 
 
     </application>
