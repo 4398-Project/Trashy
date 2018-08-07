@@ -23,16 +23,20 @@ public class DBInterface {
         //Get last id;
         lastID = 11;
 
-        Query lastQ = reference.child("submissions").orderByValue().limitToLast(1);
+        Query lastQ = reference.child("submissions").orderByChild("id").limitToLast(1);
         lastQ.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                lastID = Integer.parseInt(dataSnapshot.child("id").getValue(String.class));
+                try{
+                    Submission lastSub = dataSnapshot.child("id").getValue(Submission.class);
+                    lastID = Integer.parseInt(lastSub.getId());
+                }catch (NullPointerException ex){
+                    lastID = 50;
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                lastID = 10;
             }
         });
     }
@@ -42,7 +46,12 @@ public class DBInterface {
     }
 
     public String genID(){
-        Integer ID = lastID + 1;
+        Integer ID;
+        try{
+            ID = lastID + 1;
+        }catch (NullPointerException ex){
+            ID = 200;
+        }
         return ID.toString();
     }
 
