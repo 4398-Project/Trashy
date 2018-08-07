@@ -156,15 +156,7 @@ public class Trash extends AppCompatActivity {
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        /*captureBTN = (Button)findViewById(R.id.captureBTN);
-        captureBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePicture();
-                uploadPicture();
 
-            }
-        });}*/
         captureBTN = findViewById(R.id.captureBTN);
         captureBTN.setOnClickListener(new View.OnClickListener() {
             @Override
