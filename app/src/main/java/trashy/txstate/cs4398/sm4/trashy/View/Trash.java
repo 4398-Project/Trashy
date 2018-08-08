@@ -43,6 +43,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -60,6 +62,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import trashy.txstate.cs4398.sm4.trashy.Controller.DBInterface;
 import trashy.txstate.cs4398.sm4.trashy.Model.Submission;
 import trashy.txstate.cs4398.sm4.trashy.Model.TrashItem;
 import trashy.txstate.cs4398.sm4.trashy.Model.User;
@@ -71,8 +74,6 @@ public class Trash extends AppCompatActivity {
     private TextureView textureView;
     FirebaseStorage fireStorage = FirebaseStorage.getInstance();
     StorageReference storageRef = fireStorage.getReference();
-    StorageReference picRef = storageRef.child("cuck.jpg");
-
 
 
     //Checks state orientation of image
@@ -148,27 +149,26 @@ public class Trash extends AppCompatActivity {
 
         //Retrieve info from past activity
        final  Intent intent = this.getIntent();
-        Bundle bundle = intent.getExtras();
-        //Vars
-       // User user = (User) bundle.getSerializable("user");
-            final User user = null;
+       final String username = intent.getStringExtra("username");
+            final User user = new User();
+            user.setUsername(username);
+
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        /*captureBTN = (Button)findViewById(R.id.captureBTN);
-        captureBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePicture();
-                uploadPicture();
 
-            }
-        });}*/
         captureBTN = findViewById(R.id.captureBTN);
         captureBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePicture();
+                //Get DB Instance to store submissions
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DBInterface dbInterface = new DBInterface(database, username);
+                //Generate the ID
+                final String ID = dbInterface.genID();
+                //Gen reference for pic storage from ID
+                StorageReference picRef = storageRef.child(ID + ".jpg");
+                takePicture(picRef);
                 //Inflate dialog for information entry
                 AlertDialog.Builder dBuilder = new AlertDialog.Builder(Trash.this);
                 View dView = getLayoutInflater().inflate(R.layout.dialog_trash_info_entry, null);
@@ -192,14 +192,18 @@ public class Trash extends AppCompatActivity {
                 submitTrashInfoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        int worked = 0;
+                        int numSet = 0;
                         //Pull fields
                         String trashDescription = trashDescriptionField.getText().toString();
-                        String trashType = trashTypeEntryField.getText().toString();
+                        String trashType = trashTypeEntryField.getText().toString().toLowerCase();
                         String trashLocation = trashItemLocationField.getText().toString();
                         Boolean recyclable = (recyclableField.getText().toString().toLowerCase() == "yes") ? true : false;
+                        String recyclableString = recyclableField.getText().toString().toLowerCase();
                         Integer numberOfTrashItems;
                         try {
                             numberOfTrashItems = Integer.parseInt(numberOfTrashItemsField.getText().toString());
+                            numSet = 1;
                         }catch (NumberFormatException ex){
                             numberOfTrashItems = 0;
                             Toast.makeText(Trash.this, "Enter a valid number of trash items", Toast.LENGTH_SHORT).show();
@@ -207,19 +211,22 @@ public class Trash extends AppCompatActivity {
 
 
                         //Check for complete fields
-                        if(!trashType.isEmpty())
+
+                        if(!trashType.isEmpty() & (trashType.equals("plastic") || trashType.equals("paper")|| trashType.equals("metal") || trashType.equals("wood") || trashType.equals("glass")))
                             if (numberOfTrashItems > 0)
                                 if (!trashLocation.isEmpty())
-                                    if (!trashDescription.isEmpty());
-                                        if (!recyclableField.getText().toString().isEmpty()){
+                                    if (!trashDescription.isEmpty())
+                                        if (!recyclableField.getText().toString().isEmpty() & (recyclableString.equals("yes") || recyclableString.equals("no"))){
                                             TrashItem trashItem = new TrashItem(trashDescription, trashType, trashLocation, recyclable);
-                                            Submission submission = new Submission(user);
+                                            Submission submission = new Submission(user,ID.substring(0,8));
                                             submission.addTrashItem(trashItem, numberOfTrashItems);
-                                            uploadPicture();
+                                            dbInterface.uploadSubmission(submission);
                                             Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
+                                            worked = 1;
                                         }
-                        Toast.makeText(Trash.this, "Complete all fields", Toast.LENGTH_SHORT).show();
+                                        if (numSet == 1 & worked == 0)
+                                            Toast.makeText(Trash.this, "Trash type must be: plastic, paper, metal, wood, or glass. Recyclable must be yes or no.", Toast.LENGTH_LONG).show();
                     }
                 });
                 cancelTrashInfoButton.setOnClickListener(new View.OnClickListener() {
@@ -233,7 +240,7 @@ public class Trash extends AppCompatActivity {
 
     }
 
-    private void takePicture() {
+    private void takePicture(final StorageReference picRef) {
         if (cameraDevice == null)
             return;
         CameraManager manager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
@@ -267,7 +274,7 @@ public class Trash extends AppCompatActivity {
                     int rotation = getWindowManager().getDefaultDisplay().getRotation();
                     captureBuilder.set(CaptureRequest.CONTROL_MODE, ORIENTATIONS.get(rotation));
 
-            file = new File("SDCARD/Android/data");
+            file = new File("SDCARD/DCIM/SDCamera");
             ImageReader.OnImageAvailableListener readListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader imageReader) {
@@ -295,6 +302,7 @@ public class Trash extends AppCompatActivity {
                     }
                 }
                 private void save(byte[] bytes) throws IOException{
+                    Toast.makeText(Trash.this, "inside u", Toast.LENGTH_LONG).show();
                     UploadTask uploadTask = picRef.putBytes(bytes);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
