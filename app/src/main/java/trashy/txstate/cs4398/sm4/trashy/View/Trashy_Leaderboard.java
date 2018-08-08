@@ -1,19 +1,30 @@
 package trashy.txstate.cs4398.sm4.trashy.View;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import trashy.txstate.cs4398.sm4.trashy.Model.Submission;
 import trashy.txstate.cs4398.sm4.trashy.R;
 
 public class Trashy_Leaderboard extends AppCompatActivity {
+
 
     private TextView entry1;
     private TextView entry2;
@@ -53,6 +64,7 @@ public class Trashy_Leaderboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trashy__leaderboard);
+        final List<String> submissions = new ArrayList<>();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -68,10 +80,27 @@ public class Trashy_Leaderboard extends AppCompatActivity {
         entry8 = findViewById(R.id.user_LDB_Field08);
         entry10 = findViewById(R.id.user_LDB_Field10);
 
-    }
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Subs");
+        ref.child("submissions").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-    private ArrayList<Submission> listOfSub(){
-        return null;
+               Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                for (DataSnapshot child : children) {
+                    String value = child.getValue().toString();
+                    submissions.add(value);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
