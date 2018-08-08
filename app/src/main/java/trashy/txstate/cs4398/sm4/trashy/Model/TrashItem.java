@@ -62,17 +62,23 @@ public class TrashItem {
         switch (trashType.toLowerCase()){
             case "plastic":
                 this.trashType = trashType;
-                pointWorth = (recyclable) ? 5 : 10;
+                pointWorth = (recyclable) ? 20 : 25;
                 break;
             case "paper" :
                 this.trashType = trashType;
-                pointWorth = (recyclable) ? 5 : 10;
+                pointWorth = (recyclable) ? 10 : 15;
                 break;
             case "metal" :
                 this.trashType = trashType;
-                pointWorth = (recyclable) ? 5 : 10;
+                pointWorth = (recyclable) ? 30 : 35;
                 break;
+            case "wood" :
+                this.trashType = trashType;
+                pointWorth = (recyclable) ? 25 : 30;
                 default:
+            case "glass" :
+                this.trashType = trashType;
+                pointWorth = (recyclable) ? 40 : 45;
                     this.trashType = "N/A";
                     pointWorth = 0;
                     break;

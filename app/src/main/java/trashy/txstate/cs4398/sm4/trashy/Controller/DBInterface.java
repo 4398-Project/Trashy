@@ -15,44 +15,23 @@ public class DBInterface {
     FirebaseDatabase database;
     DatabaseReference reference;
     Integer lastID;
+    String username;
 
-    public DBInterface(FirebaseDatabase database) {
+    public DBInterface(FirebaseDatabase database, String username) {
         this.database = database;
         this.reference = database.getReference("Subs");
-
+        this.username = username;
         //Get last id;
         lastID = 11;
 
-        Query lastQ = reference.child("submissions").orderByChild("id").limitToLast(1);
-        lastQ.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try{
-                    Submission lastSub = dataSnapshot.child("id").getValue(Submission.class);
-                    lastID = Integer.parseInt(lastSub.getId());
-                }catch (NullPointerException ex){
-                    lastID = 50;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
     }
 
     public void uploadSubmission(Submission submission) {
-        reference.child("submissions").child(genID()).setValue(submission);
+        reference.child("submissions").child(username.substring(0,8)).setValue(submission);
     }
 
     public String genID(){
-        Integer ID;
-        try{
-            ID = lastID + 1;
-        }catch (NullPointerException ex){
-            ID = 200;
-        }
-        return ID.toString();
+        return username;
     }
 
     public DatabaseReference getReference() {

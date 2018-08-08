@@ -149,10 +149,10 @@ public class Trash extends AppCompatActivity {
 
         //Retrieve info from past activity
        final  Intent intent = this.getIntent();
-        Bundle bundle = intent.getExtras();
-        //Vars
-       // User user = (User) bundle.getSerializable("user");
-            final User user = null;
+       final String username = intent.getStringExtra("username");
+            final User user = new User();
+            user.setUsername(username);
+
         textureView = (TextureView)findViewById(R.id.textureView);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
@@ -163,7 +163,7 @@ public class Trash extends AppCompatActivity {
             public void onClick(View view) {
                 //Get DB Instance to store submissions
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                final DBInterface dbInterface = new DBInterface(database);
+                final DBInterface dbInterface = new DBInterface(database, username);
                 //Generate the ID
                 final String ID = dbInterface.genID();
                 //Gen reference for pic storage from ID
@@ -213,7 +213,7 @@ public class Trash extends AppCompatActivity {
                                     if (!trashDescription.isEmpty());
                                         if (!recyclableField.getText().toString().isEmpty()){
                                             TrashItem trashItem = new TrashItem(trashDescription, trashType, trashLocation, recyclable);
-                                            Submission submission = new Submission(user,ID);
+                                            Submission submission = new Submission(user,ID.substring(0,8));
                                             submission.addTrashItem(trashItem, numberOfTrashItems);
                                             dbInterface.uploadSubmission(submission);
                                             Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
