@@ -1,17 +1,23 @@
 package trashy.txstate.cs4398.sm4.trashy.Model;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 
 /**
  * The type Submission.
  */
-public class Submission {
+public class Submission{
     private String id;
     private Integer lastId = 0; // must be pulled from DB
     private Integer totalPoints;
     private User user;
     private TrashItem trashItem;
 
+    //TESTING ONLY
+    public void setTotalPoints(Integer pts){
+        this.totalPoints = pts;
+    }
     /**
      * Instantiates a new Submission.
      *
