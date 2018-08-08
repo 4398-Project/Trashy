@@ -295,17 +295,16 @@ public class Trash extends AppCompatActivity {
                     }
                 }
                 private void save(byte[] bytes) throws IOException{
-                    Toast.makeText(Trash.this, "inside u", Toast.LENGTH_LONG).show();
                     UploadTask uploadTask = picRef.putBytes(bytes);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(Trash.this, "Failed hahaha", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Trash.this, "Upload Task Failed", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(Trash.this, "Somehow Someway it worked", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Trash.this, "Upload Task Successful", Toast.LENGTH_SHORT).show();
                         }
                     });
 

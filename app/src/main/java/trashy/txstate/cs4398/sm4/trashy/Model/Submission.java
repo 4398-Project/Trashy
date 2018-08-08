@@ -28,6 +28,9 @@ public class Submission{
         this.id = id;
     }
 
+    public Submission() {
+    }
+
     /**
      * Add trash item.
      *

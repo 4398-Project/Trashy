@@ -1,21 +1,31 @@
+//Daniels
 package trashy.txstate.cs4398.sm4.trashy.View;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import trashy.txstate.cs4398.sm4.trashy.Model.Submission;
-import trashy.txstate.cs4398.sm4.trashy.Model.User;
 import trashy.txstate.cs4398.sm4.trashy.R;
 
 public class Trashy_Leaderboard extends AppCompatActivity {
+
 
     private TextView entry1;
     private TextView entry2;
@@ -55,12 +65,10 @@ public class Trashy_Leaderboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trashy__leaderboard);
+        final List<String> submissions = new ArrayList<>();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        //Sorted ArrayList of submnission
-        ArrayList<Submission> sortedSubmissions = sortSubs(listOfSub());
 
         //Associate handles with UI
         entry1 = findViewById(R.id.user_LDB_Field01);
@@ -73,32 +81,37 @@ public class Trashy_Leaderboard extends AppCompatActivity {
         entry8 = findViewById(R.id.user_LDB_Field08);
         entry10 = findViewById(R.id.user_LDB_Field10);
 
-        entry1.setText(makeEntry(sortedSubmissions.get(0)));
-        entry2.setText(makeEntry(sortedSubmissions.get(1)));
-        entry3.setText(makeEntry(sortedSubmissions.get(2)));
-        entry4.setText(makeEntry(sortedSubmissions.get(3)));
-        entry5.setText(makeEntry(sortedSubmissions.get(4)));
-        entry6.setText(makeEntry(sortedSubmissions.get(5)));
-        entry7.setText(makeEntry(sortedSubmissions.get(6)));
-        entry8.setText(makeEntry(sortedSubmissions.get(7)));
-        entry9.setText(makeEntry(sortedSubmissions.get(8)));
-        entry10.setText(makeEntry(sortedSubmissions.get(9)));
 
+        String value;
+        final String[] submissionsList = new String [100];
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Subs");
+        ref.child("submissions").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                int i = 0;
+                for (DataSnapshot child : children) {
+                    String value = child.getValue().toString();
+                    submissionsList[i] = value;
+                    i++;
+                    entry2.setText(value);
+                }
+                entry1.setText((submissionsList[0] != null) ? submissionsList[0]: "N/A" );
+                entry2.setText((submissionsList[1] != null) ? submissionsList[1]: "N/A" );
+                entry3.setText((submissionsList[2] != null) ? submissionsList[2]: "N/A" );
+                entry4.setText((submissionsList[3] != null) ? submissionsList[3]: "N/A" );
+                entry5.setText((submissionsList[4] != null) ? submissionsList[4]: "N/A" );
+                entry6.setText((submissionsList[5] != null) ? submissionsList[5]: "N/A" );
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
-
-    private ArrayList<Submission> listOfSub() {
-        //ForTesting
-        ArrayList<Submission> testList = new ArrayList<>();
-        for (Integer i = 0; i < 10; i++){
-            User user = new User();
-            user.setUsername("usr" + i.toString());
-            Submission sub = new Submission(user,i.toString());
-            sub.setTotalPoints(i);
-            testList.add(sub);
-        }
-        return testList;
-    }
-
     private ArrayList<Submission> sortSubs(ArrayList<Submission> unsortedList){
         Submission theChosenOne; // Temporary place holder
         ArrayList<Submission> sortedList;
@@ -111,12 +124,7 @@ public class Trashy_Leaderboard extends AppCompatActivity {
                 }
             }
         }
-        sortedList = new ArrayList<Submission>(unsortedList.subList(0, 10));
-        return sortedList;
+        //sortedList = new ArrayList<Submission>(unsortedList.subList(0, 10));
+        return unsortedList;
     }
-
-    private String makeEntry(Submission sub){
-        return (sub.getId().toString() + "       Score : " + sub.getTotalPoints());
-    }
-
 }
