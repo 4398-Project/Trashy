@@ -82,6 +82,7 @@ public class Login extends AppCompatActivity {
                                         Intent changeActivity;
 
                                         changeActivity = new Intent(Login.this, Trash.class);
+                                        changeActivity.putExtra("username", userNameField.getText().toString());
                                         startActivity(changeActivity);
                                     } else {
                                         // Sign in fails due to incorrect credentials or error connecting to server
