@@ -267,7 +267,7 @@ public class Trash extends AppCompatActivity {
                     int rotation = getWindowManager().getDefaultDisplay().getRotation();
                     captureBuilder.set(CaptureRequest.CONTROL_MODE, ORIENTATIONS.get(rotation));
 
-            file = new File("SDCARD/Android/data");
+            file = new File("SDCARD/DCIM/SDCamera");
             ImageReader.OnImageAvailableListener readListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader imageReader) {
@@ -295,6 +295,7 @@ public class Trash extends AppCompatActivity {
                     }
                 }
                 private void save(byte[] bytes) throws IOException{
+                    Toast.makeText(Trash.this, "inside u", Toast.LENGTH_LONG).show();
                     UploadTask uploadTask = picRef.putBytes(bytes);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
