@@ -98,12 +98,10 @@ public class Trashy_Leaderboard extends AppCompatActivity {
                 String delims2 = "[=}]+";
                 String[] tokens, tokens2;
                 String [] topUsernames = new String[9999];
+                String tempS;
                 int [] submissionsCompare = new int[9999];
                 int i, temp;
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                //compare values and print leaderboard
-                /*for (i = 0; i < Integer.MAX_VALUE - 5; i++)
-                        submissionsCompare[i] = 0;*/
                 i = 0;
                 for (DataSnapshot child : children) {
                     String value = child.getValue().toString();
@@ -113,25 +111,21 @@ public class Trashy_Leaderboard extends AppCompatActivity {
                     submissionsCompare[i] = Integer.parseInt(tokens[1]);
                     topUsernames[i] = tokens2[4];
 
-                    //submissionsList[i] = value;
-                    //submissionsList[i] = (i + 1) + ")\t\t" + tokens[1] + "\t\t" + tokens2[4];
                     i++;
-                    //entry2.setText(value);
-
-                    /*String value = child.getValue().toString();
-                    tokens = value.split(delims);//score
-                    tokens2 = value.split(delims2);//username
-                    submissionsList[i] = value;
-                    submissionsList[i] = (i + 1) + ")\t\t" + tokens[1] + "\t\t" + tokens2[4];
-                    i++;
-                    entry2.setText(value);*/
                 }
 
-                Arrays.sort(submissionsCompare);
-                for(i = 0; i < submissionsCompare.length / 2; i++){
-                    temp = submissionsCompare[i];
-                    submissionsCompare[i] = submissionsCompare[submissionsCompare.length - i - 1];
-                    submissionsCompare[submissionsCompare.length - i - 1] = temp;
+                for (i = 0; i < submissionsCompare.length - 1; i++) {
+                    for(int j = 0; j < submissionsCompare.length - 1; j++) {
+                        if(submissionsCompare[i] < submissionsCompare[j + 1] && i < (j + 1)) {
+                            temp = submissionsCompare [j + 1];
+                            submissionsCompare [j + 1]= submissionsCompare [i];
+                            submissionsCompare [i] = temp;
+
+                            tempS = topUsernames [j + 1];
+                            topUsernames [j + 1]= topUsernames [i];
+                            topUsernames [i] = tempS;
+                        }
+                    }
                 }
 
                 for (i = 0; i < 10; i ++){
