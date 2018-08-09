@@ -17,6 +17,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import java.lang.*;
 import trashy.txstate.cs4398.sm4.trashy.R;
 
+/**
+ * Logs user in
+ */
 public class Login extends AppCompatActivity {
     //Handles
     /**Handle for username field*/
@@ -27,6 +30,10 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String TAG;
 
+    /**
+     * When login launches confirm the user is not already signed in. Update the UI appropriately.
+     * Code is currently not necessary, but is good to have should the program be expanded in the future.
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -36,7 +43,11 @@ public class Login extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Creates the view
+     *
+     * @param savedInstanceState saves an instance of the current state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +63,11 @@ public class Login extends AppCompatActivity {
         //Assigning Listeners
         //Sign in button listener
         signInButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Handles sign in on click listener
+             *
+             * @param view The View of the program
+             */
             @Override
             public void onClick(View view) {
 
@@ -65,6 +81,12 @@ public class Login extends AppCompatActivity {
                     mAuth.signInWithEmailAndPassword(userNameField.getText().toString(), passwordField.getText().toString())
                             .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
 
+                                /**
+                                 * Handles when sign in is pressed.
+                                 * Either signs in a user, admin, or displays an appropriate error message.
+                                 *
+                                 * @param task The successful act of signing in
+                                 */
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (rootUser(userNameField.getText().toString(), passwordField.getText().toString())) {
@@ -109,8 +131,15 @@ public class Login extends AppCompatActivity {
             }
         });
 
+
         //Register button listener
         registerButton.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * Handles sign in on click listener
+             *
+             * @param view The View of the program
+             */
             @Override
             public void onClick(View view){
                 //Retrieving user entered values
@@ -124,6 +153,13 @@ public class Login extends AppCompatActivity {
                 } else {
                     mAuth.createUserWithEmailAndPassword(userNameField.getText().toString(), passwordField.getText().toString())
                             .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+
+                                /**
+                                 * Handles when register is pressed.
+                                 * Either registers a user or displays an appropriate error message.
+                                 *
+                                 * @param task The successful act of signing in
+                                 */
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
@@ -157,6 +193,13 @@ public class Login extends AppCompatActivity {
 
     }
 
+    /**
+     * Check if user is a root User
+     *
+     * @param userName User's username
+     * @param password User's password
+     * @return true - is a root user
+     */
     private boolean rootUser(String userName, String password){
         if (userNameField.getText().toString().equals("mmr161@txstate.edu") && passwordField.getText().toString().equals("rootaccess")) {
             return true;
@@ -170,6 +213,12 @@ public class Login extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * When login launches confirm the user is not already signed in. Update the UI appropriately.
+     * Code is currently not necessary, but is good to have should the program be expanded in the future.
+     *
+     * @param user The user object
+     */
     //TODO
     private void updateUI(FirebaseUser user) {
         /*hideProgressDialog();

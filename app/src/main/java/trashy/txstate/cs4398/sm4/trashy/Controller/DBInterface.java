@@ -11,12 +11,21 @@ import com.google.firebase.database.ValueEventListener;
 
 import trashy.txstate.cs4398.sm4.trashy.Model.Submission;
 
+/**
+ * Interfaces with firebase
+ */
 public class DBInterface {
     FirebaseDatabase database;
     DatabaseReference reference;
     Integer lastID;
     String username;
 
+    /**
+     * instantiates DBInterface
+     *
+     * @param database the firebase server represented as an object
+     * @param username user's username
+     */
     public DBInterface(FirebaseDatabase database, String username) {
         this.database = database;
         this.reference = database.getReference("Subs");
@@ -26,14 +35,29 @@ public class DBInterface {
 
     }
 
+    /**
+     * Uploads a submission object to firebase
+     *
+     * @param submission contains username and information about the trash (converted into a score)
+     */
     public void uploadSubmission(Submission submission) {
         reference.child("submissions").child(username.substring(0,8)).setValue(submission);
     }
 
+    /**
+     * generates an ID in the form of username
+     *
+     * @return ID in the form of username
+     */
     public String genID(){
         return username;
     }
 
+    /**
+     * gets reference from firebase
+     *
+     * @return reference from firebase
+     */
     public DatabaseReference getReference() {
         return reference;
     }

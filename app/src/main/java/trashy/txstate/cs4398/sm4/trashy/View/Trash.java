@@ -68,6 +68,9 @@ import trashy.txstate.cs4398.sm4.trashy.Model.TrashItem;
 import trashy.txstate.cs4398.sm4.trashy.Model.User;
 import trashy.txstate.cs4398.sm4.trashy.R;
 
+/**
+ * Submissions view
+ */
 public class Trash extends AppCompatActivity {
 
     private Button captureBTN;
@@ -99,8 +102,15 @@ public class Trash extends AppCompatActivity {
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        /**
+         * Handles bottom panel buttons
+         *
+         * @param item buttons
+         * @return true when button is pushed
+         */
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Intent intent;
@@ -121,17 +131,33 @@ public class Trash extends AppCompatActivity {
     };
 
     CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+        /**
+         * Display camera preview
+         *
+         * @param camera camera object
+         */
         @Override
         public void onOpened(@NonNull CameraDevice camera) {
             cameraDevice = camera;
             createCameraPreview();
         }
 
+        /**
+         * Closes camera when disconnected
+         *
+         * @param cameraDevice camera object
+         */
         @Override
         public void onDisconnected(@NonNull CameraDevice cameraDevice) {
             cameraDevice.close();
         }
 
+        /**
+         * Closes camera on error
+         *
+         * @param cameraDevice camera object
+         * @param i (not utilized)
+         */
         @Override
         public void onError(@NonNull CameraDevice cameraDevice, int i) {
             cameraDevice.close();
@@ -139,6 +165,11 @@ public class Trash extends AppCompatActivity {
         }
     };
 
+    /**
+     * Creates submissions view
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,6 +190,11 @@ public class Trash extends AppCompatActivity {
 
         captureBTN = findViewById(R.id.captureBTN);
         captureBTN.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Handles submission buttons
+             *
+             * @param view View object
+             */
             @Override
             public void onClick(View view) {
                 //Get DB Instance to store submissions
@@ -190,6 +226,11 @@ public class Trash extends AppCompatActivity {
 
                 //Listeners for trash info dialog
                 submitTrashInfoButton.setOnClickListener(new View.OnClickListener() {
+                    /**
+                     * Verifies submissions are valid
+                     *
+                     * @param view View object
+                     */
                     @Override
                     public void onClick(View view) {
                         int worked = 0;
@@ -240,6 +281,11 @@ public class Trash extends AppCompatActivity {
 
     }
 
+    /**
+     * Takes picture
+     *
+     * @param picRef Picture object
+     */
     private void takePicture(final StorageReference picRef) {
         if (cameraDevice == null)
             return;
@@ -276,6 +322,11 @@ public class Trash extends AppCompatActivity {
 
             file = new File("SDCARD/DCIM/SDCamera");
             ImageReader.OnImageAvailableListener readListener = new ImageReader.OnImageAvailableListener() {
+                /**
+                 * Saves a taken picture
+                 *
+                 * @param imageReader object that allows the picture to be processed and manipulated
+                 */
                 @Override
                 public void onImageAvailable(ImageReader imageReader) {
                     Image image = null;
@@ -301,6 +352,13 @@ public class Trash extends AppCompatActivity {
                         }
                     }
                 }
+
+                /**
+                 * uploads imgae to firebase
+                 *
+                 * @param bytes contains the image
+                 * @throws IOException
+                 */
                 private void save(byte[] bytes) throws IOException{
                     UploadTask uploadTask = picRef.putBytes(bytes);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -355,6 +413,9 @@ public class Trash extends AppCompatActivity {
 
     }
 
+    /**
+     * Creates the preview of what the camera sees and displays it as the background
+     */
     private void createCameraPreview() {
         try{
             SurfaceTexture texture = textureView.getSurfaceTexture();
@@ -382,6 +443,9 @@ public class Trash extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates camera preview
+     */
     private void updatePreview() {
         if(cameraDevice == null)
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
@@ -393,6 +457,9 @@ public class Trash extends AppCompatActivity {
         }
     }
 
+    /**
+     * Opens the camera view
+     */
     @SuppressLint("MissingPermission")
     private void openCamera() {
         CameraManager manager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
@@ -440,6 +507,14 @@ public class Trash extends AppCompatActivity {
         }
     };
 
+    /**
+     * Confirm you have permissions to use Camera
+     * Note this is overwritten to not be used above
+     *
+     * @param requestCode The code confirming camera permissions
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == REQUEST_CAMERA_PERMISSION)
@@ -452,6 +527,9 @@ public class Trash extends AppCompatActivity {
         }
     }
 
+    /**
+     * Resumes camera
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -462,12 +540,18 @@ public class Trash extends AppCompatActivity {
             textureView.setSurfaceTextureListener(textureListener);
     }
 
+    /**
+     * Pauses camera
+     */
     @Override
     protected void onPause() {
         stopBackgroundThread();
         super.onPause();
     }
 
+    /**
+     * Stops camera from running in background when submissions are being done
+     */
     private void stopBackgroundThread() {
         mBackgroundThread.quitSafely();
         try{
@@ -479,6 +563,9 @@ public class Trash extends AppCompatActivity {
         }
     }
 
+    /**
+     * Starts background camera activity
+     */
     private void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("Camera Background");
         mBackgroundThread.start();

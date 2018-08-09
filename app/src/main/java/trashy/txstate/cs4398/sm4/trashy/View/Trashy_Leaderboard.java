@@ -27,6 +27,9 @@ import java.util.List;
 import trashy.txstate.cs4398.sm4.trashy.Model.Submission;
 import trashy.txstate.cs4398.sm4.trashy.R;
 
+/**
+ * Handles Leaderboard view
+ */
 public class Trashy_Leaderboard extends AppCompatActivity {
 
 
@@ -46,6 +49,12 @@ public class Trashy_Leaderboard extends AppCompatActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+        /**
+         * Handles navagation buttons at bottom of the screen
+         *
+         * @param item Menu button objects
+         * @return
+         */
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
@@ -64,6 +73,13 @@ public class Trashy_Leaderboard extends AppCompatActivity {
         }
     };
 
+    /**
+     * Pulls the scores and usernames from firebase
+     * Sorts them
+     * Displays them in leaderboard format
+     *
+     * @param savedInstanceState saves the current state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +107,11 @@ public class Trashy_Leaderboard extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Subs");
         ref.child("submissions").addValueEventListener(new ValueEventListener() {
+            /**
+             * Capture the
+             *
+             * @param dataSnapshot Object containing all the information from a submission to firebase
+             */
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -148,12 +169,26 @@ public class Trashy_Leaderboard extends AppCompatActivity {
                 entry10.setText((submissionsList[9] != null) ? submissionsList[9]: "N/A" );
             }
 
+            /**
+             * Handles case where leaderboard posting is cancelled
+             * Case never occured so method was never finished, but may be helpful in future development
+             *
+             * @param databaseError Object that reports firebase errors
+             */
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
     }
+
+    /**
+     * Attempts to sort the array list
+     * Does not work
+     *
+     * @param unsortedList the unsorted array list
+     * @return should return the sorted list
+     */
     private ArrayList<Submission> sortSubs(ArrayList<Submission> unsortedList){
 
         Submission theChosenOne; // Temporary place holder

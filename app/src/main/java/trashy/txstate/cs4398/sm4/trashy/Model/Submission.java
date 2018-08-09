@@ -21,7 +21,8 @@ public class Submission{
     /**
      * Instantiates a new Submission.
      *
-     * @param user the user
+     * @param user the user's username
+     * @param id the id to reference a submission from firebase
      */
     public Submission(User user, String id) {
         this.user = user;
@@ -35,6 +36,7 @@ public class Submission{
      * Add trash item.
      *
      * @param trashItem the trash item
+     * @param numberOfTrashItems the number of trash items
      */
     public void addTrashItem(TrashItem trashItem, Integer numberOfTrashItems){
         this.trashItem = trashItem;
