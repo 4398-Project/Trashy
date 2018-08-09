@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import java.util.Arrays;
+
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import trashy.txstate.cs4398.sm4.trashy.Model.Submission;
@@ -79,6 +82,7 @@ public class Trashy_Leaderboard extends AppCompatActivity {
         entry6 = findViewById(R.id.user_LDB_Field06);
         entry7 = findViewById(R.id.user_LDB_Field07);
         entry8 = findViewById(R.id.user_LDB_Field08);
+        entry9 = findViewById(R.id.user_LDB_Field09);
         entry10 = findViewById(R.id.user_LDB_Field10);
 
 
@@ -93,22 +97,50 @@ public class Trashy_Leaderboard extends AppCompatActivity {
                 String delims = "[=,]+";
                 String delims2 = "[=}]+";
                 String[] tokens, tokens2;
-                String [] topUsernames = new String[10];
-                int [] submissionsCompare = new int[10];
+                String [] topUsernames = new String[9999];
+                int [] submissionsCompare = new int[9999];
                 int i, temp;
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 //compare values and print leaderboard
-                for (i = 0; i < 10; i++)
-                        submissionsCompare[i] = 0;
+                /*for (i = 0; i < Integer.MAX_VALUE - 5; i++)
+                        submissionsCompare[i] = 0;*/
                 i = 0;
                 for (DataSnapshot child : children) {
                     String value = child.getValue().toString();
                     tokens = value.split(delims);//score
                     tokens2 = value.split(delims2);//username
+
+                    submissionsCompare[i] = Integer.parseInt(tokens[1]);
+                    topUsernames[i] = tokens2[4];
+
+                    //submissionsList[i] = value;
+                    //submissionsList[i] = (i + 1) + ")\t\t" + tokens[1] + "\t\t" + tokens2[4];
+                    i++;
+                    //entry2.setText(value);
+
+                    /*String value = child.getValue().toString();
+                    tokens = value.split(delims);//score
+                    tokens2 = value.split(delims2);//username
                     submissionsList[i] = value;
                     submissionsList[i] = (i + 1) + ")\t\t" + tokens[1] + "\t\t" + tokens2[4];
                     i++;
-                    entry2.setText(value);
+                    entry2.setText(value);*/
+                }
+
+                Arrays.sort(submissionsCompare);
+                for(i = 0; i < submissionsCompare.length / 2; i++){
+                    temp = submissionsCompare[i];
+                    submissionsCompare[i] = submissionsCompare[submissionsCompare.length - i - 1];
+                    submissionsCompare[submissionsCompare.length - i - 1] = temp;
+                }
+
+                for (i = 0; i < 10; i ++){
+                    //10) gets indented strangely if this isn't done
+                    if (i != 9)
+                        submissionsList[i] = (i + 1) + ")\t\t" + submissionsCompare[i] + "\t\t" + topUsernames[i];
+                    else
+                        submissionsList[i] = (i + 1) + ") " + submissionsCompare[i] + "\t\t" + topUsernames[i];
+
                 }
                 entry1.setText((submissionsList[0] != null) ? submissionsList[0]: "N/A" );
                 entry2.setText((submissionsList[1] != null) ? submissionsList[1]: "N/A" );
@@ -116,6 +148,10 @@ public class Trashy_Leaderboard extends AppCompatActivity {
                 entry4.setText((submissionsList[3] != null) ? submissionsList[3]: "N/A" );
                 entry5.setText((submissionsList[4] != null) ? submissionsList[4]: "N/A" );
                 entry6.setText((submissionsList[5] != null) ? submissionsList[5]: "N/A" );
+                entry7.setText((submissionsList[6] != null) ? submissionsList[6]: "N/A" );
+                entry8.setText((submissionsList[7] != null) ? submissionsList[7]: "N/A" );
+                entry9.setText((submissionsList[8] != null) ? submissionsList[8]: "N/A" );
+                entry10.setText((submissionsList[9] != null) ? submissionsList[9]: "N/A" );
             }
 
             @Override
