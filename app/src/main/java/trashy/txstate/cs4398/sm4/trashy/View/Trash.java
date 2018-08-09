@@ -192,14 +192,18 @@ public class Trash extends AppCompatActivity {
                 submitTrashInfoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        int worked = 0;
+                        int numSet = 0;
                         //Pull fields
                         String trashDescription = trashDescriptionField.getText().toString();
-                        String trashType = trashTypeEntryField.getText().toString();
+                        String trashType = trashTypeEntryField.getText().toString().toLowerCase();
                         String trashLocation = trashItemLocationField.getText().toString();
                         Boolean recyclable = (recyclableField.getText().toString().toLowerCase() == "yes") ? true : false;
+                        String recyclableString = recyclableField.getText().toString().toLowerCase();
                         Integer numberOfTrashItems;
                         try {
                             numberOfTrashItems = Integer.parseInt(numberOfTrashItemsField.getText().toString());
+                            numSet = 1;
                         }catch (NumberFormatException ex){
                             numberOfTrashItems = 0;
                             Toast.makeText(Trash.this, "Enter a valid number of trash items", Toast.LENGTH_SHORT).show();
@@ -207,19 +211,22 @@ public class Trash extends AppCompatActivity {
 
 
                         //Check for complete fields
-                        if(!trashType.isEmpty())
+
+                        if(!trashType.isEmpty() & (trashType.equals("plastic") || trashType.equals("paper")|| trashType.equals("metal") || trashType.equals("wood") || trashType.equals("glass")))
                             if (numberOfTrashItems > 0)
                                 if (!trashLocation.isEmpty())
-                                    if (!trashDescription.isEmpty());
-                                        if (!recyclableField.getText().toString().isEmpty()){
+                                    if (!trashDescription.isEmpty())
+                                        if (!recyclableField.getText().toString().isEmpty() & (recyclableString.equals("yes") || recyclableString.equals("no"))){
                                             TrashItem trashItem = new TrashItem(trashDescription, trashType, trashLocation, recyclable);
                                             Submission submission = new Submission(user,ID.substring(0,8));
                                             submission.addTrashItem(trashItem, numberOfTrashItems);
                                             dbInterface.uploadSubmission(submission);
                                             Toast.makeText(Trash.this, "Submission is TR@SHY!", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
+                                            worked = 1;
                                         }
-                        Toast.makeText(Trash.this, "Complete all fields", Toast.LENGTH_SHORT).show();
+                        if (numSet == 1 & worked == 0)
+                            Toast.makeText(Trash.this, "Trash type must be: plastic, paper, metal, wood, or glass. Recyclable must be yes or no.", Toast.LENGTH_LONG).show();
                     }
                 });
                 cancelTrashInfoButton.setOnClickListener(new View.OnClickListener() {

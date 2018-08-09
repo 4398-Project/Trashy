@@ -90,11 +90,23 @@ public class Trashy_Leaderboard extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                String delims = "[=,]+";
+                String delims2 = "[=}]+";
+                String[] tokens, tokens2;
+                String [] topUsernames = new String[10];
+                int [] submissionsCompare = new int[10];
+                int i, temp;
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                int i = 0;
+                //compare values and print leaderboard
+                for (i = 0; i < 10; i++)
+                        submissionsCompare[i] = 0;
+                i = 0;
                 for (DataSnapshot child : children) {
                     String value = child.getValue().toString();
+                    tokens = value.split(delims);//score
+                    tokens2 = value.split(delims2);//username
                     submissionsList[i] = value;
+                    submissionsList[i] = (i + 1) + ")\t\t" + tokens[1] + "\t\t" + tokens2[4];
                     i++;
                     entry2.setText(value);
                 }
@@ -113,6 +125,7 @@ public class Trashy_Leaderboard extends AppCompatActivity {
         });
     }
     private ArrayList<Submission> sortSubs(ArrayList<Submission> unsortedList){
+
         Submission theChosenOne; // Temporary place holder
         ArrayList<Submission> sortedList;
         for (Integer i = 0; i < unsortedList.size(); i++){
